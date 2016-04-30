@@ -30,7 +30,6 @@ QMap<QString, int> Settings::readSettings(){
         line.replace(" ","");
         line.replace("\n","");
         if(line.startsWith("gridWidth=")){
-            qDebug()<<line.replace("gridWidth=","");
             settings["gridWidth"] = line.replace("gridWidth=","").toInt();
         }else if(line.startsWith("gridHeight")){
             settings["gridHeight"] = line.replace("gridHeight=","").toInt();

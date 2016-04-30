@@ -8,6 +8,7 @@
 #include <QMessageBox>
 #include <QPainter>
 #include <QMap>
+#include <QMouseEvent>
 
 CombatMap::CombatMap(QWidget *parent) :
     QMainWindow(parent),
@@ -18,8 +19,17 @@ CombatMap::CombatMap(QWidget *parent) :
     ui->gridLayout_scroll->addWidget(ui->gridLabel,0,0,Qt::AlignCenter);
     ui->gridLayout_scroll->removeWidget(ui->imgLabel);
     ui->gridLayout_scroll->addWidget(ui->imgLabel,0,0,Qt::AlignCenter);
-    gridWidth = 16;
-    gridHeight = 16;
+    QMap<QString, int> settings = Settings::readSettings();
+    gridWidth = settings["gridWidth"];
+    gridHeight = settings["gridHeight"];
+    QImage map = QImage("img/blank.png");
+    if(!map.isNull()){
+        ui->imgLabel->setPixmap(QPixmap::fromImage(map));
+        generateGrid();
+    }
+
+    connect(ui->gridLabel,SIGNAL(clicked(QMouseEvent*)),this,SLOT(gridClicked(QMouseEvent*)));
+
 }
 
 CombatMap::~CombatMap()
@@ -53,6 +63,8 @@ void CombatMap::on_actionOpen_Image_triggered()
 }
 
 void CombatMap::generateGrid(){
+    if(ui->imgLabel->pixmap()==NULL) return;
+
     QPixmap grid(ui->imgLabel->size());
     grid.fill(Qt::transparent);
     QPainter* paint = new QPainter(&grid);
@@ -64,6 +76,14 @@ void CombatMap::generateGrid(){
 
     for(int y=0;y<ui->imgLabel->height();y+=gridHeight){
         paint->drawLine(0,y,ui->imgLabel->width(),y);
+    }
+
+    for(int i=0;i<participants.length();i++){
+        QImage image = QImage(participants[i]->texturePath);
+        if(!image.isNull()){
+            image = image.scaled(gridWidth, gridHeight);
+            paint->drawImage(participants[i]->x*gridWidth,participants[i]->y*gridHeight,image);
+        }
     }
     delete paint;
     ui->gridLabel->setPixmap(grid);
@@ -80,4 +100,47 @@ void CombatMap::settings_changed(QMap<QString, int> *settings){
     gridWidth = settings->value("gridWidth");
     gridHeight = settings->value("gridHeight");
     generateGrid();
+}
+
+void CombatMap::on_addPlayerButton_clicked()
+{
+    CombatParticipant *newPlayer = new CombatParticipant("Player "+QString::number(participants.length()),new QListWidgetItem());
+
+    for(int i=0;i<participants.length();i++){
+        if(participants[i]->x==newPlayer->x&&participants[i]->y==newPlayer->y){
+            newPlayer->x++;
+        }
+    }
+
+    ui->playerList->addItem(newPlayer->item);
+    connect(ui->playerList,SIGNAL(currentTextChanged(QString)),newPlayer,SLOT(textChanged(QString)));
+    participants << newPlayer;
+    generateGrid();
+}
+
+void CombatMap::on_removePlayerButton_clicked()
+{
+    if(ui->playerList->currentItem()==NULL) return;
+    CombatParticipant* current;
+    for(int i=0;i<participants.length();i++){
+        if(participants.at(i)->item == ui->playerList->currentItem()){
+            current = participants.takeAt(i);
+        }
+    }
+    delete ui->playerList->currentItem();
+
+    if(current!=NULL)delete current;
+
+    generateGrid();
+}
+
+void CombatMap::gridClicked(QMouseEvent* event){
+    qDebug()<<event->pos();
+    for(int i=0;i<participants.length();i++){
+        QRect playerGrid = QRect(participants[i]->x*gridWidth,participants[i]->y*gridHeight,gridWidth,gridHeight);
+        qDebug() << playerGrid;
+        if(playerGrid.contains(event->pos().x(),event->pos().y())){
+            participants[i]->item->setSelected(true);
+        }
+    }
 }

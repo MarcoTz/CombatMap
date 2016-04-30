@@ -14,10 +14,14 @@ TEMPLATE = app
 
 SOURCES += main.cpp\
         combatmap.cpp \
-    settings.cpp
+    settings.cpp \
+    combatparticipant.cpp \
+    clickablelabel.cpp
 
 HEADERS  += combatmap.h \
-    settings.h
+    settings.h \
+    combatparticipant.h \
+    clickablelabel.h
 
 FORMS    += combatmap.ui \
     settings.ui

@@ -14,13 +14,13 @@ class Settings : public QDialog
 public:
     explicit Settings(QWidget *parent = 0);
     ~Settings();
+    static QMap<QString, int> readSettings();
 
 private slots:
     void on_OK_clicked();
 
 private:
     Ui::Settings *ui;
-    QMap<QString, int> readSettings();
     void writeSettings();
     int gridWidth;
     int gridHeight;

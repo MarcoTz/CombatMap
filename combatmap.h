@@ -2,6 +2,7 @@
 #define COMBATMAP_H
 
 #include <QMainWindow>
+#include "combatparticipant.h"
 
 namespace Ui {
 class CombatMap;
@@ -19,12 +20,17 @@ private slots:
     void on_actionOpen_Image_triggered();
     void on_actionOptions_triggered();
     void settings_changed(QMap<QString, int>*);
+    void on_addPlayerButton_clicked();
+    void on_removePlayerButton_clicked();
+    void gridClicked(QMouseEvent*);
 
 private:
     Ui::CombatMap *ui;
+    QList<CombatParticipant*> participants;
     int gridWidth;
     int gridHeight;
     void generateGrid();
+    void updatePlayerList();
 };
 
 #endif // COMBATMAP_H
