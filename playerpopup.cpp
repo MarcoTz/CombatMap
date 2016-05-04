@@ -87,3 +87,32 @@ void playerPopup::on_textureButton_clicked()
         emit textureChanged(openDialog.selectedFiles().first());
     }
 }
+
+void playerPopup::keyPressEvent(QKeyEvent* event){
+
+    switch(event->key()){
+        case Qt::Key_W:
+            emit yChanged(ui->yEdit->text().toInt()-1);
+            break;
+        case Qt::Key_A:
+            emit xChanged(ui->xEdit->text().toInt()-1);
+            break;
+        case Qt::Key_S:
+            emit yChanged(ui->yEdit->text().toInt()+1);
+            break;
+        case Qt::Key_D:
+            emit xChanged(ui->xEdit->text().toInt()+1);
+            break;
+
+    }
+}
+
+void playerPopup::on_speedEdit_editingFinished()
+{
+    emit speedChanged(ui->speedEdit->text().toInt());
+}
+
+void playerPopup::setSpeed(int newSpeed){
+    ui->speedEdit->setText(QString::number(newSpeed));
+    emit speedChanged(newSpeed);
+}

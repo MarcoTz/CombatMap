@@ -16,7 +16,9 @@ public:
     ~playerPopup();
     void setEdits(int,int);
     void setTextureURL(QString);
+    void setSpeed(int);
     void closeEvent(QCloseEvent*);
+    void keyPressEvent(QKeyEvent*);
 
 private slots:
     void on_LEFTButton_clicked();
@@ -26,6 +28,7 @@ private slots:
     void on_xEdit_editingFinished();
     void on_yEdit_editingFinished();
     void on_textureButton_clicked();
+    void on_speedEdit_editingFinished();
 
 private:
     Ui::playerPopup *ui;
@@ -34,6 +37,7 @@ signals:
     void movePlayer(int);
     void xChanged(int);
     void yChanged(int);
+    void speedChanged(int);
     void textureChanged(QString);
 };
 

@@ -16,6 +16,7 @@ public:
     explicit CombatMap(QWidget *parent = 0);
     ~CombatMap();
     void closeEvent(QCloseEvent*);
+    void showEvent(QShowEvent *);
 
 private slots:
     void on_actionOpen_Image_triggered();
@@ -26,6 +27,7 @@ private slots:
     void gridClicked(QMouseEvent*);
     void updateGrid(CombatParticipant*);
     void on_playerList_currentItemChanged(QListWidgetItem *current, QListWidgetItem *previous);
+    void on_actionTogglePlayerList_triggered();
 
 private:
     Ui::CombatMap *ui;
