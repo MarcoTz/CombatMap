@@ -23,6 +23,8 @@ private slots:
     void on_addPlayerButton_clicked();
     void on_removePlayerButton_clicked();
     void gridClicked(QMouseEvent*);
+    void updateGrid(CombatParticipant*);
+    void on_playerList_currentItemChanged(QListWidgetItem *current, QListWidgetItem *previous);
 
 private:
     Ui::CombatMap *ui;

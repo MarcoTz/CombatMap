@@ -22,6 +22,10 @@ CombatMap::CombatMap(QWidget *parent) :
     QMap<QString, int> settings = Settings::readSettings();
     gridWidth = settings["gridWidth"];
     gridHeight = settings["gridHeight"];
+
+    if(gridWidth<1) gridWidth=1;
+    if(gridHeight<1) gridHeight=1;
+
     QImage map = QImage("img/blank.png");
     if(!map.isNull()){
         ui->imgLabel->setPixmap(QPixmap::fromImage(map));
@@ -56,6 +60,12 @@ void CombatMap::on_actionOpen_Image_triggered()
             if (mapImg.isNull()) {
                 QMessageBox::information(this, "Couldn't load image",reader.errorString());
             }
+        ui->playerList->clear();
+        for(int i=0;i<participants.length();i++){
+            delete participants[i]->popup;
+            delete participants[i];
+        }
+        participants.clear();
         ui->imgLabel->setPixmap(QPixmap::fromImage(mapImg));
         ui->imgLabel->resize(mapImg.size());
         generateGrid();
@@ -82,6 +92,11 @@ void CombatMap::generateGrid(){
         QImage image = QImage(participants[i]->texturePath);
         if(!image.isNull()){
             image = image.scaled(gridWidth, gridHeight);
+            if(participants[i]->item==ui->playerList->currentItem()){
+                paint->setPen(QColor(255,255,128));
+                paint->fillRect(participants[i]->x*gridWidth,participants[i]->y*gridHeight,gridWidth,gridHeight,Qt::SolidPattern);
+                paint->setPen(QColor(0,0,0));
+            }
             paint->drawImage(participants[i]->x*gridWidth,participants[i]->y*gridHeight,image);
         }
     }
@@ -99,21 +114,33 @@ void CombatMap::on_actionOptions_triggered()
 void CombatMap::settings_changed(QMap<QString, int> *settings){
     gridWidth = settings->value("gridWidth");
     gridHeight = settings->value("gridHeight");
+    if(gridWidth<1) gridWidth=1;
+    if(gridHeight<1) gridHeight=1;
     generateGrid();
 }
 
 void CombatMap::on_addPlayerButton_clicked()
 {
-    CombatParticipant *newPlayer = new CombatParticipant("Player "+QString::number(participants.length()),new QListWidgetItem());
+    int newx = 0;
+    int newy = 0;
 
     for(int i=0;i<participants.length();i++){
-        if(participants[i]->x==newPlayer->x&&participants[i]->y==newPlayer->y){
-            newPlayer->x++;
+        if(participants[i]->x==newx&&participants[i]->y==newy){
+            if(((newx+1)*gridWidth)>=ui->imgLabel->pixmap()->width()){
+                newy++;
+                newx=0;
+
+            }else newx++;
         }
     }
 
+    CombatParticipant *newPlayer = new CombatParticipant("Player "+QString::number(participants.length()),new QListWidgetItem(),newx,newy);
+
     ui->playerList->addItem(newPlayer->item);
+    ui->playerList->setCurrentItem(newPlayer->item);
+    newPlayer->popup->show();
     connect(ui->playerList,SIGNAL(currentTextChanged(QString)),newPlayer,SLOT(textChanged(QString)));
+    connect(newPlayer,SIGNAL(updateGrid(CombatParticipant*)),this,SLOT(updateGrid(CombatParticipant*)));
     participants << newPlayer;
     generateGrid();
 }
@@ -129,18 +156,52 @@ void CombatMap::on_removePlayerButton_clicked()
     }
     delete ui->playerList->currentItem();
 
-    if(current!=NULL)delete current;
+    if(current!=NULL){
+        delete current->popup;
+        delete current;
+    }
 
     generateGrid();
 }
 
 void CombatMap::gridClicked(QMouseEvent* event){
-    qDebug()<<event->pos();
     for(int i=0;i<participants.length();i++){
         QRect playerGrid = QRect(participants[i]->x*gridWidth,participants[i]->y*gridHeight,gridWidth,gridHeight);
-        qDebug() << playerGrid;
         if(playerGrid.contains(event->pos().x(),event->pos().y())){
             participants[i]->item->setSelected(true);
         }
     }
+}
+
+void CombatMap::on_playerList_currentItemChanged(QListWidgetItem *current, QListWidgetItem *previous)
+{
+
+    for(int i=0;i<participants.length();i++){
+        if(participants[i]->item == current){
+            participants[i]->popup->show();
+        }else if(participants[i]->item == previous){
+            participants[i]->popup->hide();
+        }
+    }
+
+    generateGrid();
+}
+
+void CombatMap::updateGrid(CombatParticipant* moved){
+
+    if(moved->x<0){
+        moved->x=0;
+    }else if(moved->x*gridWidth>ui->imgLabel->pixmap()->width()){
+        moved->x=ui->imgLabel->pixmap()->width()/gridWidth;
+    }
+
+    if(moved->y<0){
+        moved->y=0;
+    }else if(moved->y*gridHeight>ui->imgLabel->pixmap()->height()){
+        moved->y=ui->imgLabel->pixmap()->height()/gridHeight;
+    }
+
+    moved->popup->setEdits(moved->x,moved->y);
+
+    generateGrid();
 }

@@ -16,12 +16,15 @@ SOURCES += main.cpp\
         combatmap.cpp \
     settings.cpp \
     combatparticipant.cpp \
-    clickablelabel.cpp
+    clickablelabel.cpp \
+    playerpopup.cpp
 
 HEADERS  += combatmap.h \
     settings.h \
     combatparticipant.h \
-    clickablelabel.h
+    clickablelabel.h \
+    playerpopup.h
 
 FORMS    += combatmap.ui \
-    settings.ui
+    settings.ui \
+    playerpopup.ui
