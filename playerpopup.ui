@@ -34,10 +34,30 @@
      </property>
     </widget>
    </item>
+   <item row="7" column="0" rowspan="2">
+    <widget class="QPushButton" name="LEFTButton">
+     <property name="text">
+      <string>LEFT</string>
+     </property>
+    </widget>
+   </item>
+   <item row="2" column="2">
+    <widget class="QLineEdit" name="yEdit"/>
+   </item>
    <item row="2" column="0">
     <widget class="QLabel" name="yLabel">
      <property name="text">
       <string>Y:</string>
+     </property>
+    </widget>
+   </item>
+   <item row="3" column="2">
+    <widget class="QLineEdit" name="xEdit"/>
+   </item>
+   <item row="3" column="0" colspan="2">
+    <widget class="QLabel" name="xLabel">
+     <property name="text">
+      <string>X:</string>
      </property>
     </widget>
    </item>
@@ -48,25 +68,26 @@
      </property>
     </widget>
    </item>
-   <item row="7" column="0" rowspan="2">
-    <widget class="QPushButton" name="LEFTButton">
+   <item row="9" column="0">
+    <widget class="QLabel" name="textureLabel">
      <property name="text">
-      <string>LEFT</string>
+      <string>Texture:</string>
      </property>
     </widget>
    </item>
-   <item row="3" column="0" colspan="2">
-    <widget class="QLabel" name="xLabel">
+   <item row="9" column="2">
+    <widget class="QLabel" name="texturePathLabel">
      <property name="text">
-      <string>X:</string>
+      <string>URL</string>
      </property>
     </widget>
    </item>
-   <item row="2" column="2">
-    <widget class="QLineEdit" name="yEdit"/>
-   </item>
-   <item row="3" column="2">
-    <widget class="QLineEdit" name="xEdit"/>
+   <item row="9" column="4">
+    <widget class="QPushButton" name="textureButton">
+     <property name="text">
+      <string>change</string>
+     </property>
+    </widget>
    </item>
   </layout>
  </widget>

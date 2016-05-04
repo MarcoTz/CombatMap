@@ -33,12 +33,20 @@ CombatMap::CombatMap(QWidget *parent) :
     }
 
     connect(ui->gridLabel,SIGNAL(clicked(QMouseEvent*)),this,SLOT(gridClicked(QMouseEvent*)));
+    this->setWindowState(Qt::WindowMaximized);
 
 }
 
 CombatMap::~CombatMap()
 {
     delete ui;
+}
+
+void CombatMap::closeEvent(QCloseEvent * event){
+    for(int j=0;j<participants.length();j++){
+        if(participants[j]->item==ui->playerList->currentItem()) participants[j]->popup->hide();
+    }
+    event->accept();
 }
 
 void CombatMap::on_actionOpen_Image_triggered()
@@ -59,6 +67,7 @@ void CombatMap::on_actionOpen_Image_triggered()
         QImage mapImg = reader.read();
             if (mapImg.isNull()) {
                 QMessageBox::information(this, "Couldn't load image",reader.errorString());
+                return;
             }
         ui->playerList->clear();
         for(int i=0;i<participants.length();i++){
@@ -134,7 +143,7 @@ void CombatMap::on_addPlayerButton_clicked()
         }
     }
 
-    CombatParticipant *newPlayer = new CombatParticipant("Player "+QString::number(participants.length()),new QListWidgetItem(),newx,newy);
+    CombatParticipant *newPlayer = new CombatParticipant("Player "+QString::number(participants.length()),new QListWidgetItem(),newx,newy,"img/player.png",this);
 
     ui->playerList->addItem(newPlayer->item);
     ui->playerList->setCurrentItem(newPlayer->item);
@@ -168,19 +177,22 @@ void CombatMap::gridClicked(QMouseEvent* event){
     for(int i=0;i<participants.length();i++){
         QRect playerGrid = QRect(participants[i]->x*gridWidth,participants[i]->y*gridHeight,gridWidth,gridHeight);
         if(playerGrid.contains(event->pos().x(),event->pos().y())){
-            participants[i]->item->setSelected(true);
+            ui->playerList->setCurrentItem(participants[i]->item);
         }
     }
+    generateGrid();
 }
 
 void CombatMap::on_playerList_currentItemChanged(QListWidgetItem *current, QListWidgetItem *previous)
 {
-
+    if(current!=NULL&&previous!=NULL)qDebug()<<current->text()<<previous->text();
     for(int i=0;i<participants.length();i++){
         if(participants[i]->item == current){
             participants[i]->popup->show();
+            qDebug()<<current->text();
         }else if(participants[i]->item == previous){
             participants[i]->popup->hide();
+            qDebug()<<previous->text();
         }
     }
 

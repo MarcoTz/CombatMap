@@ -30,6 +30,7 @@ public slots:
     void movePlayer(int);
     void changeX(int);
     void changeY(int);
+    void textureChanged(QString);
 };
 
 #endif // COMBATPARTICIPANT_H

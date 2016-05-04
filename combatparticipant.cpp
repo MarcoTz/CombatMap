@@ -11,13 +11,15 @@ CombatParticipant::CombatParticipant(QString name, QListWidgetItem* item, int x,
     this->item->setFlags(this->item->flags() | Qt::ItemIsEditable);
     this->item->setText(this->name);
 
-    this->popup = new playerPopup();
+    this->popup = new playerPopup(qobject_cast<QWidget *>(parent));
     this->popup->setWindowTitle(this->name);
     this->popup->setEdits(this->x,this->y);
+    this->popup->setTextureURL(this->texturePath);
 
     connect(this->popup,SIGNAL(movePlayer(int)),this,SLOT(movePlayer(int)));
     connect(this->popup,SIGNAL(xChanged(int)),this,SLOT(changeX(int)));
     connect(this->popup,SIGNAL(yChanged(int)),this,SLOT(changeY(int)));
+    connect(this->popup,SIGNAL(textureChanged(QString)),this,SLOT(textureChanged(QString)));
 }
 
 void CombatParticipant::textChanged(QString newName){
@@ -53,5 +55,10 @@ void CombatParticipant::changeX(int newx){
 
 void CombatParticipant::changeY(int newy){
     this->y = newy;
+    emit updateGrid(this);
+}
+
+void CombatParticipant::textureChanged(QString newPath){
+    this->texturePath=newPath;
     emit updateGrid(this);
 }

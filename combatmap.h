@@ -15,6 +15,7 @@ class CombatMap : public QMainWindow
 public:
     explicit CombatMap(QWidget *parent = 0);
     ~CombatMap();
+    void closeEvent(QCloseEvent*);
 
 private slots:
     void on_actionOpen_Image_triggered();

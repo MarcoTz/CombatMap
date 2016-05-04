@@ -1,6 +1,11 @@
 #include "playerpopup.h"
 #include "ui_playerpopup.h"
 #include <QDebug>
+#include <QFileDialog>
+#include <QStandardPaths>
+#include <QImageReader>
+#include <QMessageBox>
+#include <QCloseEvent>
 
 playerPopup::playerPopup(QWidget *parent) :
     QDialog(parent),
@@ -13,6 +18,10 @@ playerPopup::playerPopup(QWidget *parent) :
 playerPopup::~playerPopup()
 {
     delete ui;
+}
+
+void playerPopup::closeEvent(QCloseEvent* event){
+    event->ignore();
 }
 
 void playerPopup::on_LEFTButton_clicked()
@@ -48,4 +57,33 @@ void playerPopup::on_xEdit_editingFinished()
 void playerPopup::on_yEdit_editingFinished()
 {
     emit yChanged(ui->yEdit->text().toInt());
+}
+
+void playerPopup::setTextureURL(QString newURL){
+    ui->texturePathLabel->setText(newURL);
+}
+
+void playerPopup::on_textureButton_clicked()
+{
+    QFileDialog openDialog(this, "Open Player Texture Image");
+    openDialog.setDirectory(QStandardPaths::standardLocations(QStandardPaths::PicturesLocation).last());
+
+    QStringList supportedMimeTypes = QStringList();
+    for(int i=0;i<QImageReader::supportedMimeTypes().size();i++){
+        if(QImageReader::supportedMimeTypes().at(i)!=""){
+            supportedMimeTypes.append(QString(QImageReader::supportedMimeTypes().at(i)));
+        }
+    }
+    openDialog.setMimeTypeFilters(supportedMimeTypes);
+
+    if(openDialog.exec()==QFileDialog::Accepted){
+        QImageReader reader(openDialog.selectedFiles().first());
+        QImage mapImg = reader.read();
+            if (mapImg.isNull()) {
+                QMessageBox::information(this, "Couldn't load image",reader.errorString());
+                return;
+            }
+
+        emit textureChanged(openDialog.selectedFiles().first());
+    }
 }
