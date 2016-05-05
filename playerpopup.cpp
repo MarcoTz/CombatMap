@@ -106,13 +106,3 @@ void playerPopup::keyPressEvent(QKeyEvent* event){
 
     }
 }
-
-void playerPopup::on_speedEdit_editingFinished()
-{
-    emit speedChanged(ui->speedEdit->text().toInt());
-}
-
-void playerPopup::setSpeed(int newSpeed){
-    ui->speedEdit->setText(QString::number(newSpeed));
-    emit speedChanged(newSpeed);
-}

@@ -1,11 +1,10 @@
 #include "combatparticipant.h"
 #include <QDebug>
 
-CombatParticipant::CombatParticipant(QString name, QListWidgetItem* item, int x, int y, int speed, QString texturePath, QObject *parent) : QObject(parent)
+CombatParticipant::CombatParticipant(QString name, QListWidgetItem* item, int x, int y, QString texturePath, QObject *parent) : QObject(parent)
 {
     this->x = x;
     this->y = y;
-    this->speed = speed;
     this->texturePath = texturePath;
     this->name = name;
     this->item = item;
@@ -16,13 +15,11 @@ CombatParticipant::CombatParticipant(QString name, QListWidgetItem* item, int x,
     this->popup->setWindowTitle(this->name);
     this->popup->setEdits(this->x,this->y);
     this->popup->setTextureURL(this->texturePath);
-    this->popup->setSpeed(this->speed);
 
     connect(this->popup,SIGNAL(movePlayer(int)),this,SLOT(movePlayer(int)));
     connect(this->popup,SIGNAL(xChanged(int)),this,SLOT(changeX(int)));
     connect(this->popup,SIGNAL(yChanged(int)),this,SLOT(changeY(int)));
     connect(this->popup,SIGNAL(textureChanged(QString)),this,SLOT(textureChanged(QString)));
-    connect(this->popup,SIGNAL(speedChanged(int)),this,SLOT(speedChanged(int)));
 }
 
 void CombatParticipant::textChanged(QString newName){
@@ -65,8 +62,4 @@ void CombatParticipant::changeY(int newy){
 void CombatParticipant::textureChanged(QString newPath){
     this->texturePath=newPath;
     emit updateGrid(this);
-}
-
-void CombatParticipant::speedChanged(int newSpeed){
-    this->speed = newSpeed;
 }
