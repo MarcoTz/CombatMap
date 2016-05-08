@@ -36,6 +36,7 @@ private:
     int gridHeight;
     void generateGrid();
     void updatePlayerList();
+    void resetPlayers();
 };
 
 #endif // COMBATMAP_H

@@ -75,17 +75,23 @@ void CombatMap::on_actionOpen_Image_triggered()
                 QMessageBox::information(this, "Couldn't load image",reader.errorString());
                 return;
             }
-        ui->playerList->clear();
-        for(int i=0;i<participants.length();i++){
-            delete participants[i]->popup;
-            delete participants[i];
-        }
-        participants.clear();
+        resetPlayers();
         ui->imgLabel->setPixmap(QPixmap::fromImage(mapImg));
         ui->imgLabel->resize(mapImg.size());
         generateGrid();
     }
 }
+
+void CombatMap::resetPlayers(){
+
+    ui->playerList->clear();
+    for(int i=0;i<participants.length();i++){
+        delete participants[i]->popup;
+        delete participants[i];
+    }
+    participants.clear();
+}
+
 
 void CombatMap::generateGrid(){
     if(ui->imgLabel->pixmap()==NULL) return;
@@ -125,8 +131,12 @@ void CombatMap::on_actionOptions_triggered()
 }
 
 void CombatMap::settings_changed(QMap<QString, int> *settings){
-    gridWidth = settings->value("gridWidth");
-    gridHeight = settings->value("gridHeight");
+    if(settings->value("gridWidth")!=gridWidth || settings->value("gridHeight")!=gridHeight){
+        gridWidth = settings->value("gridWidth");
+        gridHeight = settings->value("gridHeight");
+        resetPlayers();
+    }
+
     if(gridWidth<1) gridWidth=1;
     if(gridHeight<1) gridHeight=1;
     generateGrid();
