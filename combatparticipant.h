@@ -10,7 +10,7 @@ class CombatParticipant : public QObject
 {
     Q_OBJECT
 public:
-    explicit CombatParticipant(QString name="", QListWidgetItem* item=NULL, int x=0, int y=0, QString texturePath = "img/player.png", QObject *parent = 0);
+    explicit CombatParticipant(QString name="", QListWidgetItem* item=NULL, int x=0, int y=0, int size=1, QString texturePath = "img/player.png", QObject *parent = 0);
 
     QString texturePath;
     int x;
@@ -18,9 +18,9 @@ public:
     QString name;
     QListWidgetItem* item;
     playerPopup* popup;
+    int size;
 
 private:
-
 
 signals:
     void updateGrid(CombatParticipant*);
@@ -31,6 +31,7 @@ public slots:
     void changeX(int);
     void changeY(int);
     void textureChanged(QString);
+    void sizeChanged(int);
 };
 
 #endif // COMBATPARTICIPANT_H

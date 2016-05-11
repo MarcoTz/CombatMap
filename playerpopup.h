@@ -18,6 +18,7 @@ public:
     void setTextureURL(QString);
     void closeEvent(QCloseEvent*);
     void keyPressEvent(QKeyEvent*);
+    void setSize(int);
 
 private slots:
     void on_LEFTButton_clicked();
@@ -28,6 +29,8 @@ private slots:
     void on_yEdit_editingFinished();
     void on_textureButton_clicked();
 
+    void on_sizeBox_valueChanged(int arg1);
+
 private:
     Ui::playerPopup *ui;
 
@@ -36,6 +39,7 @@ signals:
     void xChanged(int);
     void yChanged(int);
     void textureChanged(QString);
+    void sizeChanged(int);
 };
 
 #endif // PLAYERPOPUP_H

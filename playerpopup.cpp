@@ -106,3 +106,17 @@ void playerPopup::keyPressEvent(QKeyEvent* event){
 
     }
 }
+
+void playerPopup::on_sizeBox_valueChanged(int arg1)
+{
+    if(arg1<1){
+        ui->sizeBox->setValue(1);
+        arg1 = 1;
+    }
+
+    emit sizeChanged(arg1);
+}
+
+void playerPopup::setSize(int newSize){
+    ui->sizeBox->setValue(newSize);
+}

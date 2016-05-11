@@ -112,9 +112,9 @@ void CombatMap::generateGrid(){
     for(int i=0;i<participants.length();i++){
         QImage image = QImage(participants[i]->texturePath);
         if(!image.isNull()){
-            image = image.scaled(gridWidth, gridHeight);
+            image = image.scaled(gridWidth*participants[i]->size, gridHeight*participants[i]->size);
             if(participants[i]->item==ui->playerList->currentItem()){
-                paint->fillRect(participants[i]->x*gridWidth,participants[i]->y*gridHeight,gridWidth,gridHeight,QColor(255,255,128));
+                paint->fillRect(participants[i]->x*gridWidth,participants[i]->y*gridHeight,gridWidth*participants[i]->size,gridHeight*participants[i]->size,QColor(255,255,128));
             }
             paint->drawImage(participants[i]->x*gridWidth,participants[i]->y*gridHeight,image);
         }

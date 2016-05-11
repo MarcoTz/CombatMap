@@ -20,21 +20,21 @@
    <string>Dialog</string>
   </property>
   <layout class="QGridLayout" name="gridLayout">
-   <item row="6" column="2">
+   <item row="5" column="2">
     <widget class="QPushButton" name="UPButton">
      <property name="text">
       <string>UP</string>
      </property>
     </widget>
    </item>
-   <item row="7" column="2">
+   <item row="6" column="2">
     <widget class="QPushButton" name="DOWNButton">
      <property name="text">
       <string>DOWN</string>
      </property>
     </widget>
    </item>
-   <item row="6" column="0" rowspan="2">
+   <item row="5" column="0" rowspan="2">
     <widget class="QPushButton" name="LEFTButton">
      <property name="text">
       <string>LEFT</string>
@@ -61,31 +61,41 @@
      </property>
     </widget>
    </item>
-   <item row="6" column="4" rowspan="2" colspan="2">
+   <item row="5" column="4" rowspan="2" colspan="2">
     <widget class="QPushButton" name="RIGHTButton">
      <property name="text">
       <string>RIGHT</string>
      </property>
     </widget>
    </item>
-   <item row="8" column="0">
+   <item row="7" column="0">
     <widget class="QLabel" name="textureLabel">
      <property name="text">
       <string>Texture:</string>
      </property>
     </widget>
    </item>
-   <item row="8" column="2">
+   <item row="7" column="2">
     <widget class="QLabel" name="texturePathLabel">
      <property name="text">
       <string>URL</string>
      </property>
     </widget>
    </item>
-   <item row="8" column="4">
+   <item row="7" column="4">
     <widget class="QPushButton" name="textureButton">
      <property name="text">
       <string>change</string>
+     </property>
+    </widget>
+   </item>
+   <item row="4" column="2">
+    <widget class="QSpinBox" name="sizeBox"/>
+   </item>
+   <item row="4" column="0">
+    <widget class="QLabel" name="sizeLabel">
+     <property name="text">
+      <string>size</string>
      </property>
     </widget>
    </item>
